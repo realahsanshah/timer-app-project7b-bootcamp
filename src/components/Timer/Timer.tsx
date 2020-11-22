@@ -1,64 +1,99 @@
 import React from 'react';
 import './Timer.css';
+import TimerButton from '../TimerButton/TimerButton';
 
 export interface TimerProps {
-    
 }
  
-const Timer: React.SFC<TimerProps> = () => {
-    const [minutes,setMinutes]=React.useState(25);
-    const [seconds,setSeconds]=React.useState(0);
-    const [isOn,setIsOn]=React.useState(false);
-
-    let myInterval:any;
-
-    const startTimer=()=>{
-        if(isOn===true){
-            return;
+export interface TimerState {
+    minutes:number,
+    seconds:number,
+    isOn:boolean
+}
+ 
+class Timer extends React.Component<TimerProps, TimerState> {
+    
+    constructor(props:TimerProps){
+        super(props);
+        this.state={
+            minutes:25,
+            seconds:0,
+            isOn:false
         }
-
-        myInterval=setInterval(()=>{
-            if(seconds>0){
-                setSeconds(seconds-1);
-            }
-              
-            if(seconds===0){
-                if(minutes===0){
-                    clearInterval(myInterval);
-                }else{
-                    setMinutes(minutes-1);
-                    setSeconds(59);
-                }
-            }
-        },1000);
-
-        setIsOn(true);
+        this.startTimer = this.startTimer.bind(this);
+        this.stopTimer = this.stopTimer.bind(this);
+        this.resetTimer = this.resetTimer.bind(this);
+        
+        
     }
 
-    const stopTimer=()=>{
-        clearInterval(myInterval);
-        setIsOn(false);
-    }
+    myInterval:any;
+    startTimer() {
+        if (this.state.isOn === true) {
+          return;
+        }
+        this.myInterval = setInterval(() => {
+          const { seconds, minutes } = this.state;
+          if (seconds > 0) {
+            this.setState(({ seconds }) => ({
+              seconds: seconds - 1,
+            }));
+          }
+          if (seconds === 0) {
+            if (minutes === 0) {
+              clearInterval(this.myInterval);
+            } else {
+              this.setState(({ minutes }) => ({
+                minutes: minutes - 1,
+                seconds: 59,
+              }));
+            }
+          }
+        }, 1000);
+        this.setState({ isOn: true });
+      }
+    
+      stopTimer() {
+        clearInterval(this.myInterval);
+        this.setState({ isOn: false });
+      }
+    
+      resetTimer() {
+        this.stopTimer();
+        this.setState({
+          minutes: 25,
+          seconds: 0,
+        });
+      }
 
     
-    const resetTimer=()=>{
-        stopTimer();
-        setMinutes(25);
-        setSeconds(0);
-    }
+    render() { 
+        const {minutes,seconds}=this.state;
 
-    
-
-    return ( 
-        <div className='timer-container'>
-            <div className="time-display">
-                {minutes}:{seconds<0?`0${seconds}`:seconds}
-            </div>
-            <div>
-                
-            </div>
+        return (   <div className="timer-container">
+        <div className="time-display">
+          {minutes<10?`0${minutes}`:minutes}:{seconds < 10 ? `0${seconds}` : seconds}
         </div>
-     );
+        <div className="timer-button-container">
+          <TimerButton
+            // className="start-timer"
+            buttonAction={this.startTimer}
+            buttonValue={'Start'}
+          />
+          <TimerButton
+            // className="stop-timer"
+            buttonAction={this.stopTimer}
+            buttonValue={'Stop'}
+          />
+          <TimerButton
+            // className="reset-timer"
+            buttonAction={this.resetTimer}
+            buttonValue={'Reset'}
+          />
+        </div>
+      </div>
+    );
+    }
 }
  
 export default Timer;
