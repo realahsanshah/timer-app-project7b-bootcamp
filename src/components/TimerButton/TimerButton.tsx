@@ -4,12 +4,13 @@ import './TimerButton.css';
 
 export interface TimerButtonProps {
    buttonAction:any,
-   buttonValue:String
+   buttonValue:String,
+   className:String
 }  
  
-const TimerButton: React.SFC<TimerButtonProps> = ({buttonAction,buttonValue}) => {
+const TimerButton: React.SFC<TimerButtonProps> = ({buttonAction,buttonValue,className}) => {
     return ( 
-        <div className="button-container" onClick={()=>buttonAction()}>
+        <div className={`button-container ${className}`} onClick={()=>buttonAction()}>
             <p className="button-value">{buttonValue}</p>
         </div>
      );

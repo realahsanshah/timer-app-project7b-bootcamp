@@ -63,6 +63,7 @@ class Timer extends React.Component<TimerProps, TimerState> {
         this.setState({
           minutes: 25,
           seconds: 0,
+          isOn:false
         });
       }
 
@@ -76,17 +77,17 @@ class Timer extends React.Component<TimerProps, TimerState> {
         </div>
         <div className="timer-button-container">
           <TimerButton
-            // className="start-timer"
+            className="start-timer"
             buttonAction={this.startTimer}
             buttonValue={'Start'}
           />
           <TimerButton
-            // className="stop-timer"
+            className="stop-timer"
             buttonAction={this.stopTimer}
             buttonValue={'Stop'}
           />
           <TimerButton
-            // className="reset-timer"
+            className="reset-timer"
             buttonAction={this.resetTimer}
             buttonValue={'Reset'}
           />
